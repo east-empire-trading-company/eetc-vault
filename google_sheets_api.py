@@ -12,8 +12,8 @@ app = Flask(__name__)
 @app.route("/api/config/fetch_from_google_sheets", methods=["POST"])
 def fetch_from_google_sheets() -> Response:
     """
-    Function that implements REST API using Flask for fetching data from a specified Google Spreadsheet.
-    It sends a POST request to an API endpoint called /api/config/fetch_from_google_sheets using
+    Function represents REST API endpoint for fetching data from a specified Google Spreadsheet.
+    It receives a POST request to an API endpoint called /api/config/fetch_from_google_sheets using
     :google_sheets.GoogleSheetsClient.get_all_sheets_as_dicts: method.
 
     :return: Flask Response object.
@@ -22,16 +22,13 @@ def fetch_from_google_sheets() -> Response:
     spreadsheet_id = request.json["spreadsheet_id"]
     sheet_names = request.json["sheet_names"]
 
-    gcc = GoogleSheetsClient(
+    google_sheets_client = GoogleSheetsClient(
         creds=GCP_SHEETS_CRED,
         scope=GCP_SHEETS_SCOPE,
     )
 
     sheet_names_dict = {}
     for sheet_name in sheet_names:
-        sheet_names_dict.update(gcc.get_all_sheets_as_dicts(spreadsheet_id, sheet_name))
+        sheet_names_dict.update(google_sheets_client.get_all_sheets_as_dicts(spreadsheet_id, sheet_name))
 
     return jsonify(sheet_names_dict)
-
-
-# TODO fetch_from_google_sheets test method
