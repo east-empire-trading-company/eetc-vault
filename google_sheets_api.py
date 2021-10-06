@@ -4,7 +4,10 @@ from flask import jsonify
 from flask import Response
 
 from google_sheets import GoogleSheetsClient
-from local_settings import GCP_SHEETS_CRED, GCP_SHEETS_SCOPE  # replace with your own Google Cloud Platform credentials
+from local_settings import (
+    GCP_SHEETS_CRED,
+    GCP_SHEETS_SCOPE,
+)  # replace with your own Google Cloud Platform credentials
 
 app = Flask(__name__)
 
@@ -29,6 +32,8 @@ def fetch_from_google_sheets() -> Response:
 
     sheet_names_dict = {}
     for sheet_name in sheet_names:
-        sheet_names_dict.update(google_sheets_client.get_all_sheets_as_dicts(spreadsheet_id, sheet_name))
+        sheet_names_dict.update(
+            google_sheets_client.get_all_sheets_as_dicts(spreadsheet_id, sheet_name)
+        )
 
     return jsonify(sheet_names_dict)
