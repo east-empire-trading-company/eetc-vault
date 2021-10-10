@@ -1,0 +1,6 @@
+black
+Flask
+google-api-python-client
+oauth2client
+pandas
+pip-tools
