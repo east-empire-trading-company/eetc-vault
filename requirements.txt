@@ -32,6 +32,8 @@ google-auth-httplib2==0.1.0
     # via google-api-python-client
 googleapis-common-protos==1.53.0
     # via google-api-core
+gunicorn==20.1.0
+    # via -r requirements.in
 httplib2==0.20.1
     # via
     #   google-api-python-client
