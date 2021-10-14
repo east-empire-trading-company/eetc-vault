@@ -3,11 +3,8 @@ from flask import request
 from flask import jsonify
 from flask import Response
 
+import settings
 from google_sheets import GoogleSheetsClient
-from local_settings import (
-    GCP_SHEETS_CRED,
-    GCP_SHEETS_SCOPE,
-)  # replace with your own Google Cloud Platform credentials
 
 app = Flask(__name__)
 
@@ -15,9 +12,10 @@ app = Flask(__name__)
 @app.route("/api/config/fetch_from_google_sheets", methods=["POST"])
 def fetch_from_google_sheets() -> Response:
     """
-    Function represents REST API endpoint for fetching data from a specified Google Spreadsheet.
-    It receives a POST request to an API endpoint called /api/config/fetch_from_google_sheets using
-    :google_sheets.GoogleSheetsClient.get_all_sheets_as_dicts: method.
+    Function represents a REST API endpoint /api/config/fetch_from_google_sheets
+    for fetching data from a specified Google Spreadsheet. Using
+    :google_sheets.GoogleSheetsClient.get_all_sheets_as_dicts: method, it gets
+    the contents of the Spreadsheet and returns it as a JSON response.
 
     :return: Flask Response object.
     """
@@ -26,8 +24,8 @@ def fetch_from_google_sheets() -> Response:
     sheet_names = request.json["sheet_names"]
 
     google_sheets_client = GoogleSheetsClient(
-        creds=GCP_SHEETS_CRED,
-        scope=GCP_SHEETS_SCOPE,
+        creds=settings.GOOGLE_SHEETS_SERVICE_ACC_CREDENTIALS,
+        scope=settings.GOOGLE_SHEETS_SCOPE,
     )
 
     sheet_names_dict = {}

@@ -1,6 +1,8 @@
 black
 Flask
 google-api-python-client
+gunicorn
 oauth2client
 pandas
 pip-tools
+environ
