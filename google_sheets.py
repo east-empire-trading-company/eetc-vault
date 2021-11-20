@@ -10,7 +10,7 @@ import pandas as pd
 
 
 class GoogleSheetsClient:
-    def __init__(self, creds: dict, scope: list):
+    def __init__(self, creds: Dict, scope: List):
         """
         Google Sheets API access constructor.
         :param creds credentials obtained from Google Cloud Platform
