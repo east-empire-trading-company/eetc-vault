@@ -35,3 +35,7 @@ def fetch_from_google_sheets() -> Response:
         )
 
     return jsonify(sheet_names_dict)
+
+
+if __name__ == "__main__":
+    app.run()
