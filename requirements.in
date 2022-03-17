@@ -1,6 +1,5 @@
 black
 Flask
-googleapiclient
 google-api-python-client
 gunicorn
 oauth2client
