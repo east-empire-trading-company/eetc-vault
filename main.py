@@ -39,37 +39,63 @@ def fetch_from_google_sheets() -> Response:
 
 @app.route("/api/config/feature_flags", methods=["POST"])
 def feature_flags_activate() -> Response:
+    """
+    Function represents a REST API endpoint /api/config/feature_flags.
+    In Feature flags sheet, it changes active status (TRUE or FALSE) of the
+    feature provided in request.
+    Method :google_sheets.GoogleSheetsClient.get_single_sheet_as_dict:
+    gets content of the Feature flags sheet.
+    Method :google_sheets_client.sheet.values().update: updates Feature flags
+    sheet with data provided in the request.
 
-    feature = request.args.get("feature")
-    switch = request.args.get("switch")
+    :return: Flask Response object.
+    """
 
-    # treba dodati jos provera za parametere, nisam video da postoji elegantno inbuilt resenje kao sa serializerima u djangu
-    if switch not in ["TRUE", "FALSE"]:
-        message = {"ERROR": f"{switch} is not valid option, it should be TRUE or FALSE"}
+    # parse request data
+    request_data = request.get_json()
+    feature = request_data["feature"]
+    active = str(request_data["active"]).upper()
+
+    # check if active is boolean and return Bad request if not
+    if active not in ["TRUE", "FALSE"]:
+        message = {
+            "ERROR": f"{active} is not a valid option, it should be true or false!"
+        }
         return make_response(message, 400)
 
+    # Google Sheets API authentication
     google_sheets_client = GoogleSheetsClient(
         creds=settings.GOOGLE_SHEETS_SERVICE_ACC_CREDENTIALS,
         scope=settings.GOOGLE_SHEETS_SCOPE,
     )
 
+    # get all data from Feature flags sheet
     all_feature_flags_data = google_sheets_client.get_single_sheet_as_dict(
-        "1EJzkRzyE-zPY_wffu2D8iECwWsWh2wTIc8cXc56PfQE", "Feature flags"
+        spreadsheet_id="1EJzkRzyE-zPY_wffu2D8iECwWsWh2wTIc8cXc56PfQE",
+        sheet_name="Feature flags",
     )
 
+    # check if provided feature exists in the sheet and change its status
+    feature_exists = False
     for _feature in all_feature_flags_data:
         if _feature["Feature"] == feature:
-            _feature["Active"] = switch
+            feature_exists = True
+            _feature["Active"] = active
 
-    feature_flags_list = []
-    for flag in all_feature_flags_data:
-        feature_flags_list.append(list(flag.values()))
+    # if feature does not exist return Bad request
+    if not feature_exists:
+        message = {f"ERROR": f"{feature} does not exist!"}
+        return make_response(message, 400)
+
+    # new data to be written in the Feature flags sheet
+    feature_flags_list = [list(flag.values()) for flag in all_feature_flags_data]
 
     value_range_body = {
         "majorDimension": "ROWS",
         "values": feature_flags_list,
     }
 
+    # update Feature flags data using Google Sheets API
     google_sheets_client.sheet.values().update(
         spreadsheetId="1EJzkRzyE-zPY_wffu2D8iECwWsWh2wTIc8cXc56PfQE",
         range="Feature flags!A2:G100",
