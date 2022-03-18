@@ -48,7 +48,7 @@ def test_bad_request_feature_flags(client):
     assert rv.status_code == 400, {"ERROR": "123 does not exist!"}
 
 
-def test_get_request_method_not_allowed_feature_flags(client):
+def test_valid_get_request__feature_flags(client):
     # given
     api_endpoint = "/api/config/feature_flags"
 
@@ -56,4 +56,4 @@ def test_get_request_method_not_allowed_feature_flags(client):
     rv = client.get(api_endpoint)
 
     # then
-    assert rv.status_code == 405
+    assert rv.status_code == 200
