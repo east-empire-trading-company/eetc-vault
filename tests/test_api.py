@@ -56,4 +56,13 @@ def test_valid_get_request__feature_flags(client):
     rv = client.get(api_endpoint)
 
     # then
-    assert rv.status_code == 200
+    expected_response_data = [
+        {"Active": "FALSE", "Feature": "test_feature", "Info": "feature description"},
+        {"Active": "TRUE", "Feature": "test_feature_2", "Info": "LOREM IPSUM"},
+        {"Active": "FALSE", "Feature": "feature", "Info": "desc"},
+        {"Active": "TRUE", "Feature": "xxy", "Info": "deSCRIPTION"},
+        {"Active": "FALSE", "Feature": "test_feat", "Info": "feature description"},
+        {"Active": "TRUE", "Feature": "tessx", "Info": "desc"},
+    ]
+
+    assert rv.status_code == 200, expected_response_data
