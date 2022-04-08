@@ -1,6 +1,9 @@
 reformat_code:
 	black .
 
+coverage:
+	pytest --cov=. tests/
+
 install_python_requirements:
 	pip install pip-tools
 	pip install -r requirements.txt
@@ -19,3 +22,4 @@ build_and_deploy_docker_image:
 deploy: build_and_deploy_docker_image
 	gcloud beta run services replace service.yaml --platform managed
 	gcloud beta run deploy eetc-vault-service --platform managed --port 8080 --image gcr.io/eetc-vault/eetc-vault-service --allow-unauthenticated
+

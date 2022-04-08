@@ -7,3 +7,5 @@ pandas
 pip-tools
 environ
 pytest
+mock
+pytest-cov
