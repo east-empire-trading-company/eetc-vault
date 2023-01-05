@@ -12,10 +12,9 @@ app = Flask(__name__)
 @app.route("/api/config/fetch_from_google_sheets", methods=["POST"])
 def fetch_from_google_sheets() -> Response:
     """
-    Function represents a REST API endpoint /api/config/fetch_from_google_sheets
-    for fetching data from a specified Google Spreadsheet. Using
-    :google_sheets.GoogleSheetsClient.get_all_sheets_as_dicts: method, it gets
-    the contents of the Spreadsheet and returns it as a JSON response.
+    REST API endpoint for fetching data from a specified Google Spreadsheet.
+    Using :google_sheets.GoogleSheetsClient.get_all_sheets_as_dicts: method, it
+    gets the contents of the Spreadsheet and returns it as a JSON response.
 
     :return: Flask Response object.
     """
@@ -37,16 +36,39 @@ def fetch_from_google_sheets() -> Response:
     return jsonify(sheet_names_dict)
 
 
+@app.route("/api/trading/current_positions", methods=["GET"])
+def current_positions() -> Response:
+    """
+    REST API endpoint for current position data from a Google Spreadsheet.
+    Using :google_sheets.GoogleSheetsClient.get_all_sheets_as_dicts: method, it
+    gets the contents of the Spreadsheet and returns it as a JSON response.
+
+    :return: Flask Response object.
+    """
+
+    spreadsheet_id = "1EJzkRzyE-zPY_wffu2D8iECwWsWh2wTIc8cXc56PfQE"
+    sheet_name = "Positions"
+
+    google_sheets_client = GoogleSheetsClient(
+        creds=settings.GOOGLE_SHEETS_SERVICE_ACC_CREDENTIALS,
+        scope=settings.GOOGLE_SHEETS_SCOPE,
+    )
+
+    # get all data from Feature flags sheet
+    positions_data = google_sheets_client.get_single_sheet_as_dict(
+        spreadsheet_id=spreadsheet_id,
+        sheet_name=sheet_name,
+    )
+
+    return jsonify(positions_data)
+
+
 @app.route("/api/config/feature_flags", methods=["GET", "POST"])
 def feature_flags() -> Response:
     """
-    Function represents a REST API endpoint /api/config/feature_flags.
-    In Feature flags sheet, it changes active status (TRUE or FALSE) of the
-    feature provided in request.
-    Method :google_sheets.GoogleSheetsClient.get_single_sheet_as_dict:
-    gets content of the Feature flags sheet.
-    Method :google_sheets_client.sheet.values().update: updates Feature flags
-    sheet with data provided in the request.
+    REST API endpoint that retrieves feature flags and their status. It also
+    changes active status (TRUE or FALSE) of the feature in Feature flags sheet,
+    specified in request.
 
     :return: Flask Response object.
     """
