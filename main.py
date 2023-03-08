@@ -5,11 +5,13 @@ from flask import Response
 
 import settings
 from google_sheets import GoogleSheetsClient
+from security import require_api_key
 
 app = Flask(__name__)
 
 
 @app.route("/api/config/fetch_from_google_sheets", methods=["POST"])
+@require_api_key
 def fetch_from_google_sheets() -> Response:
     """
     REST API endpoint for fetching data from a specified Google Spreadsheet.
@@ -37,6 +39,7 @@ def fetch_from_google_sheets() -> Response:
 
 
 @app.route("/api/trading/current_positions", methods=["GET"])
+@require_api_key
 def get_current_positions() -> Response:
     """
     REST API endpoint for current position data from a Google Spreadsheet.
@@ -64,6 +67,7 @@ def get_current_positions() -> Response:
 
 
 @app.route("/api/config/clients", methods=["GET"])
+@require_api_key
 def get_clients() -> Response:
     """
     REST API endpoint for fetching Client data from a Google Spreadsheet.
@@ -91,6 +95,7 @@ def get_clients() -> Response:
 
 
 @app.route("/api/config/feature_flags", methods=["GET", "POST"])
+@require_api_key
 def get_feature_flags() -> Response:
     """
     REST API endpoint that retrieves feature flags and their status. It also
