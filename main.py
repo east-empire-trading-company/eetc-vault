@@ -37,7 +37,7 @@ def fetch_from_google_sheets() -> Response:
 
 
 @app.route("/api/trading/current_positions", methods=["GET"])
-def current_positions() -> Response:
+def get_current_positions() -> Response:
     """
     REST API endpoint for current position data from a Google Spreadsheet.
     Using :google_sheets.GoogleSheetsClient.get_all_sheets_as_dicts: method, it
@@ -63,8 +63,35 @@ def current_positions() -> Response:
     return jsonify(positions_data)
 
 
+@app.route("/api/config/clients", methods=["GET"])
+def get_clients() -> Response:
+    """
+    REST API endpoint for fetching Client data from a Google Spreadsheet.
+    Using :google_sheets.GoogleSheetsClient.get_all_sheets_as_dicts: method, it
+    gets the contents of the Spreadsheet and returns it as a JSON response.
+
+    :return: Flask Response object.
+    """
+
+    spreadsheet_id = "1EJzkRzyE-zPY_wffu2D8iECwWsWh2wTIc8cXc56PfQE"
+    sheet_name = "Clients"
+
+    google_sheets_client = GoogleSheetsClient(
+        creds=settings.GOOGLE_SHEETS_SERVICE_ACC_CREDENTIALS,
+        scope=settings.GOOGLE_SHEETS_SCOPE,
+    )
+
+    # get all data from Feature flags sheet
+    clients_data = google_sheets_client.get_single_sheet_as_dict(
+        spreadsheet_id=spreadsheet_id,
+        sheet_name=sheet_name,
+    )
+
+    return jsonify(clients_data)
+
+
 @app.route("/api/config/feature_flags", methods=["GET", "POST"])
-def feature_flags() -> Response:
+def get_feature_flags() -> Response:
     """
     REST API endpoint that retrieves feature flags and their status. It also
     changes active status (TRUE or FALSE) of the feature in Feature flags sheet,
