@@ -28,6 +28,11 @@ spec:
             secretKeyRef:
               key: latest
               name: GOOGLE_SHEETS_SERVICE_ACC_CREDENTIALS
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: API_KEY
         resources:
           limits:
             cpu: 1000m

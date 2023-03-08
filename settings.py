@@ -3,6 +3,8 @@ import json
 import os
 
 
+API_KEY = os.getenv("API_KEY")
+
 if os.getenv("GOOGLE_SHEETS_SERVICE_ACC_CREDENTIALS"):
     GOOGLE_SHEETS_SERVICE_ACC_CREDENTIALS = json.loads(
         base64.b64decode(os.getenv("GOOGLE_SHEETS_SERVICE_ACC_CREDENTIALS"))
