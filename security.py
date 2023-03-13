@@ -2,6 +2,8 @@ from functools import wraps
 
 from flask import request, abort
 
+import settings
+
 
 def require_api_key(view_function):
     """
@@ -11,7 +13,7 @@ def require_api_key(view_function):
 
     @wraps(view_function)
     def decorated_function(*args, **kwargs):
-        api_key = "test"
+        api_key = settings.API_KEY
 
         if request.headers.get("API_KEY") == api_key:
             return view_function(*args, **kwargs)
